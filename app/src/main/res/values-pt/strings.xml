@@ -277,6 +277,9 @@
 
     <!-- Climate module -->
     <string name="module_climate">Clima</string>
+    <string name="module_radio">Rádio FM</string>
+    <string name="radio_none">Não há um app de rádio neste aparelho</string>
+    <string name="radio_open">Abrir o rádio</string>
     <string name="climate_unavailable">Esta central não tem serviço de clima</string>
     <string name="climate_power">Ligar/desligar clima</string>
     <string name="climate_ac">A/C</string>

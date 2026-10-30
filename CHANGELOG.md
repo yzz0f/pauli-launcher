@@ -6,6 +6,12 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **FM radio module:** a grid card that opens the head unit's radio app (auto-detected among
+  the installed apps) and, when that app publishes a media session, shows what is on air with
+  a play/pause control.
+
 ### Changed
 
 - **ferLauncher fork:** purple palette for the light and dark themes (night ground #0F0C15, accent

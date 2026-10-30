@@ -86,6 +86,7 @@ import org.opencarproject.launcher.presentation.widget.NavigationCard
 import org.opencarproject.launcher.presentation.widget.EmbeddedMapCard
 import org.opencarproject.launcher.presentation.widget.NotificationsCard
 import org.opencarproject.launcher.presentation.widget.ClimateCard
+import org.opencarproject.launcher.presentation.widget.RadioCard
 import kotlinx.coroutines.launch
 
 /**
@@ -244,6 +245,7 @@ fun PlacedItemCard(
                 CatalogItemKind.MEDIA -> MediaPlayerCard()
                 CatalogItemKind.NOTIFICATIONS -> NotificationsCard()
                 CatalogItemKind.CLIMATE -> ClimateCard()
+                CatalogItemKind.RADIO -> RadioCard()
                 CatalogItemKind.EMBEDDED_MAP -> {
                     val settings by viewModel.settings.collectAsStateWithLifecycle()
                     EmbeddedMapCard(settings.embeddedMapApp, settings.embeddedMapScale / 100f)

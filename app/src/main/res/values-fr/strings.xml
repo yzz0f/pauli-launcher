@@ -277,6 +277,9 @@
 
     <!-- Climate module -->
     <string name="module_climate">Climatisation</string>
+    <string name="module_radio">Radio FM</string>
+    <string name="radio_none">Aucune appli radio sur cet appareil</string>
+    <string name="radio_open">Ouvrir la radio</string>
     <string name="climate_unavailable">Aucun service de climatisation sur cet autoradio</string>
     <string name="climate_power">Allumer/éteindre la clim</string>
     <string name="climate_ac">A/C</string>

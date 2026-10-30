@@ -239,6 +239,7 @@ object BuiltinKeys {
     const val NOTIFICATIONS = "builtin/notifications"
     const val CLIMATE = "builtin/climate"
     const val EMBEDDED_MAP = "builtin/embedded_map"
+    const val RADIO = "builtin/radio"
 }
 
 /**

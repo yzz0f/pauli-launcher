@@ -273,6 +273,9 @@
 
     <!-- Climate module -->
     <string name="module_climate">空调</string>
+    <string name="module_radio">FM 收音机</string>
+    <string name="radio_none">此设备上没有收音机应用</string>
+    <string name="radio_open">打开收音机</string>
     <string name="climate_unavailable">此车机没有空调服务</string>
     <string name="climate_power">开关空调</string>
     <string name="climate_ac">A/C</string>

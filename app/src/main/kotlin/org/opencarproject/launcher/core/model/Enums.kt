@@ -62,6 +62,9 @@ enum class CatalogItemKind {
 
     /** Maps app running inside the card on a virtual display (needs root adb on the device). */
     EMBEDDED_MAP,
+
+    /** FM radio: opens the head unit's radio app and shows what is on air (MediaSession). */
+    RADIO,
 }
 
 /** Weather condition (groups Open-Meteo WMO codes). */
