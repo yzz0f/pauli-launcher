@@ -17,7 +17,7 @@ import org.opencarproject.launcher.core.pure.AccentPalette
 
 /**
  * Native Material 3 color scheme (dark theme, typical of a vehicle environment), in the
- * Morado fork's purple palette.
+ * ferLauncher fork's purple palette.
  * Components use the native Material 3 `Card`, `FilledTonalIconButton`, `IconButton`, etc.,
  * without custom styles.
  */

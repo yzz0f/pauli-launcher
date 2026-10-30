@@ -8,9 +8,9 @@ All notable changes to this project are documented here. The format follows
 
 ### Changed
 
-- **Morado fork:** purple palette for the light and dark themes (night ground #0F0C15, accent
-  #A07CFF), purple as the default accent, app name "Morado" and its own application id
-  (`com.yzz0f.morado`) so it installs next to Open Car Project.
+- **ferLauncher fork:** purple palette for the light and dark themes (night ground #0F0C15, accent
+  #A07CFF), purple as the default accent, app name "ferLauncher" and its own application id
+  (`com.yzz0f.ferlauncher`) so it installs next to Open Car Project.
 - **Accent colors:** purple now uses the hand-tuned base palette; blue is generated from its hue
   like the other accents.
 

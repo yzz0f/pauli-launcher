@@ -111,7 +111,7 @@ enum class AccentColor(val hue: Float?) {
     TEAL(175f),
     GREEN(140f),
 
-    /** The Morado fork's hand-tuned purple: uses the base palette in Theme.kt. */
+    /** The ferLauncher fork's hand-tuned purple: uses the base palette in Theme.kt. */
     PURPLE(null),
     PINK(330f),
     ORANGE(28f),
