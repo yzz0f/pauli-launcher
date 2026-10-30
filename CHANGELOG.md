@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.19.0] - 2026-10-30
+
 ### Added
 
 - **FM radio module:** a grid card that opens the head unit's radio app (auto-detected among
