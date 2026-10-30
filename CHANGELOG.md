@@ -6,6 +6,11 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **Speed scene dog:** redrawn — jointed legs that lift mid-stride, a proper muzzle and neck,
+  both ears (the near one flaps), an upright wagging tail with a light tip, and a chest patch.
+
 ## [0.19.0] - 2026-10-30
 
 ### Added

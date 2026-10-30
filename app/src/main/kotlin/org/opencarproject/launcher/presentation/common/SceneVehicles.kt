@@ -417,23 +417,54 @@ private fun DrawScope.pet(base: Offset, time: Float, kmh: Float, color: Color, c
     drawOval(Color(0x44000000), topLeft = Offset(base.x + 0.8f * u, base.y - 0.25f * u), size = Size(5.4f * u, 0.5f * u))
     // Legs: front and back in antiphase, with paws.
     val legTop = bodyY + 0.9f * u
-    listOf(1.2f to stride, 2.0f to -stride, 4.6f to -stride, 5.4f to stride).forEach { (lx, phase) ->
-        val top = Offset(base.x + lx * u, legTop)
-        val foot = Offset(top.x + phase * 0.8f * u, base.y - 0.2f * u)
-        drawLine(dark, top, foot, strokeWidth = 0.55f * u, cap = StrokeCap.Round)
-        drawCircle(dark, radius = 0.32f * u, center = foot)
+    if (cat) {
+        listOf(1.2f to stride, 2.0f to -stride, 4.6f to -stride, 5.4f to stride).forEach { (lx, phase) ->
+            val top = Offset(base.x + lx * u, legTop)
+            val foot = Offset(top.x + phase * 0.8f * u, base.y - 0.2f * u)
+            drawLine(dark, top, foot, strokeWidth = 0.55f * u, cap = StrokeCap.Round)
+            drawCircle(dark, radius = 0.32f * u, center = foot)
+        }
+    } else {
+        // Dog: two-segment legs with a joint that bends backwards while trotting; the paws lift
+        // off the ground at the top of each stride.
+        listOf(1.3f to stride, 2.1f to -stride, 4.7f to -stride, 5.5f to stride).forEach { (lx, phase) ->
+            val hip = Offset(base.x + lx * u, legTop)
+            val lift = if (moving) (phase + 1f) / 2f * 0.45f * u else 0f
+            val foot = Offset(hip.x + phase * 0.9f * u, base.y - 0.2f * u - lift)
+            val knee = Offset(
+                (hip.x + foot.x) / 2f - (0.4f - 0.25f * abs(phase)) * u,
+                (hip.y + foot.y) / 2f + 0.15f * u,
+            )
+            drawLine(color, hip, knee, strokeWidth = 0.62f * u, cap = StrokeCap.Round)
+            drawLine(dark, knee, foot, strokeWidth = 0.42f * u, cap = StrokeCap.Round)
+            drawCircle(dark, radius = 0.3f * u, center = foot)
+        }
     }
-    // Tail: waves while running; the cat's curls at the tip.
+    // Tail: waves while running; the cat's curls at the tip, the dog's is up and wags
+    // faster the faster the run (a happy dog).
     val tailBase = Offset(base.x + 0.4f * u, bodyY + 0.2f * u)
-    val tailWave = if (moving) sin(time * 12f) * 0.6f * u else sin(time * 2f) * 0.2f * u
-    val tipX = tailBase.x - (if (cat) 1.0f else 1.6f) * u
-    val tipY = tailBase.y - (if (cat) 2.2f else 1.2f) * u + tailWave
-    val tail = Path().apply {
-        moveTo(tailBase.x, tailBase.y)
-        quadraticTo(tailBase.x - 1.2f * u, tailBase.y - 1f * u + tailWave, tipX, tipY)
-        if (cat) quadraticTo(tipX - 0.1f * u, tipY - 0.6f * u, tipX + 0.4f * u, tipY - 0.5f * u)
+    if (cat) {
+        val tailWave = if (moving) sin(time * 12f) * 0.6f * u else sin(time * 2f) * 0.2f * u
+        val tipX = tailBase.x - 1.0f * u
+        val tipY = tailBase.y - 2.2f * u + tailWave
+        val tail = Path().apply {
+            moveTo(tailBase.x, tailBase.y)
+            quadraticTo(tailBase.x - 1.2f * u, tailBase.y - 1f * u + tailWave, tipX, tipY)
+            quadraticTo(tipX - 0.1f * u, tipY - 0.6f * u, tipX + 0.4f * u, tipY - 0.5f * u)
+        }
+        drawPath(tail, color, style = Stroke(width = 0.5f * u, cap = StrokeCap.Round))
+    } else {
+        val wag = (if (moving) sin(time * (10f + kmh / 8f)) else sin(time * 3f) * 0.3f) * 0.55f * u
+        val tip = Offset(tailBase.x - 1.0f * u + wag, tailBase.y - 2.1f * u)
+        val tail = Path().apply {
+            moveTo(tailBase.x, tailBase.y + 0.2f * u)
+            quadraticTo(tailBase.x - 0.9f * u, tailBase.y - 0.9f * u, tip.x, tip.y)
+            // Curl at the tip, swinging with the wag.
+            quadraticTo(tip.x + 0.3f * u + wag * 0.3f, tip.y - 0.55f * u, tip.x + 0.75f * u, tip.y - 0.35f * u)
+        }
+        drawPath(tail, color, style = Stroke(width = 0.55f * u, cap = StrokeCap.Round))
+        drawCircle(shine, radius = 0.3f * u, center = Offset(tip.x + 0.75f * u, tip.y - 0.35f * u))
     }
-    drawPath(tail, color, style = Stroke(width = 0.5f * u, cap = StrokeCap.Round))
     // Oval body with gradient (volume) and chest higher than the hips.
     val torso = Path().apply {
         moveTo(base.x + 0.6f * u, bodyY + 0.6f * u)
@@ -449,9 +480,10 @@ private fun DrawScope.pet(base: Offset, time: Float, kmh: Float, color: Color, c
             drawLine(dark.copy(alpha = 0.7f), Offset(base.x + sx * u, bodyY - 0.8f * u), Offset(base.x + (sx + 0.3f) * u, bodyY + 0.1f * u), strokeWidth = 0.22f * u, cap = StrokeCap.Round)
         }
     } else {
-        // Spots.
+        // Spots and a lighter chest patch.
         drawOval(dark.copy(alpha = 0.75f), topLeft = Offset(base.x + 1.5f * u, bodyY - 0.6f * u), size = Size(1.3f * u, 0.8f * u))
         drawOval(dark.copy(alpha = 0.75f), topLeft = Offset(base.x + 3.6f * u, bodyY - 0.3f * u), size = Size(0.9f * u, 0.6f * u))
+        drawOval(shine.copy(alpha = 0.45f), topLeft = Offset(base.x + 4.9f * u, bodyY + 0.1f * u), size = Size(1.1f * u, 0.8f * u))
     }
     val head = Offset(base.x + 6.5f * u, bodyY - 1.2f * u)
     val face = Offset(head.x + 0.45f * u, head.y - 0.25f * u)
@@ -476,20 +508,45 @@ private fun DrawScope.pet(base: Offset, time: Float, kmh: Float, color: Color, c
             drawLine(Color.White.copy(alpha = 0.8f), nose + Offset(0.05f * u, 0.1f * u), nose + Offset(0.9f * u, (0.1f + k * 0.3f) * u), strokeWidth = 1f)
         }
     } else {
-        drawCircle(Brush.radialGradient(listOf(shine, color), center = head - Offset(0.3f * u, 0.3f * u), radius = 1.3f * u), radius = 1.05f * u, center = head)
-        // Snout, tongue when running fast, nose and floppy ear flapping with the stride.
-        drawRoundRect(color, topLeft = Offset(head.x + 0.4f * u, head.y - 0.1f * u), size = Size(1.2f * u, 0.8f * u), cornerRadius = CornerRadius(0.4f * u))
-        if (kmh > 40f) {
-            drawRoundRect(Color(0xFFFF6F91), topLeft = Offset(head.x + 0.9f * u, head.y + 0.55f * u), size = Size(0.35f * u, 0.7f * u + abs(stride) * 0.15f * u), cornerRadius = CornerRadius(0.18f * u))
+        // Neck joining the chest to the head, so the head doesn't float.
+        drawLine(color, Offset(base.x + 5.6f * u, bodyY - 0.4f * u), head + Offset(0f, 0.4f * u), strokeWidth = 1.5f * u, cap = StrokeCap.Round)
+        // Far ear, behind the head.
+        rotate(if (moving) -stride * 12f else 0f, pivot = Offset(head.x + 0.15f * u, head.y - 0.8f * u)) {
+            drawRoundRect(dark.copy(alpha = 0.55f), topLeft = Offset(head.x - 0.05f * u, head.y - 0.9f * u), size = Size(0.55f * u, 1.3f * u), cornerRadius = CornerRadius(0.28f * u))
         }
-        drawCircle(Color(0xFF111111), radius = 0.2f * u, center = Offset(head.x + 1.6f * u, head.y + 0.1f * u))
-        val earTop = Offset(head.x - 0.6f * u, head.y - 0.7f * u)
-        rotate(if (moving) stride * 25f else 0f, pivot = earTop) {
-            drawRoundRect(dark, topLeft = Offset(earTop.x - 0.3f * u, earTop.y), size = Size(0.6f * u, 1.4f * u), cornerRadius = CornerRadius(0.3f * u))
+        drawCircle(Brush.radialGradient(listOf(shine, color), center = head - Offset(0.3f * u, 0.3f * u), radius = 1.3f * u), radius = 1.05f * u, center = head)
+        // Muzzle tapering to the nose, with its jaw line and the tongue out when running fast.
+        val muzzle = Path().apply {
+            moveTo(head.x + 0.5f * u, head.y - 0.55f * u)
+            quadraticTo(head.x + 1.7f * u, head.y - 0.5f * u, head.x + 1.85f * u, head.y + 0.05f * u)
+            quadraticTo(head.x + 1.8f * u, head.y + 0.55f * u, head.x + 1.0f * u, head.y + 0.65f * u)
+            quadraticTo(head.x + 0.5f * u, head.y + 0.7f * u, head.x + 0.3f * u, head.y + 0.3f * u)
+            close()
+        }
+        drawPath(muzzle, Brush.verticalGradient(listOf(shine, color), startY = head.y - 0.6f * u, endY = head.y + 0.7f * u))
+        drawLine(dark.copy(alpha = 0.6f), Offset(head.x + 1.75f * u, head.y + 0.15f * u), Offset(head.x + 1.1f * u, head.y + 0.45f * u), strokeWidth = 0.1f * u, cap = StrokeCap.Round)
+        if (kmh > 40f) {
+            rotate(stride * 6f, pivot = Offset(head.x + 1.2f * u, head.y + 0.5f * u)) {
+                drawRoundRect(Color(0xFFFF6F91), topLeft = Offset(head.x + 1.05f * u, head.y + 0.5f * u), size = Size(0.38f * u, 0.85f * u + abs(stride) * 0.15f * u), cornerRadius = CornerRadius(0.19f * u))
+            }
+        }
+        drawOval(Color(0xFF111111), topLeft = Offset(head.x + 1.55f * u, head.y - 0.35f * u), size = Size(0.45f * u, 0.35f * u))
+        // Floppy near ear flapping with the stride.
+        val earTop = Offset(head.x - 0.55f * u, head.y - 0.75f * u)
+        rotate(if (moving) stride * 22f - 8f else -8f, pivot = earTop) {
+            val ear = Path().apply {
+                moveTo(earTop.x, earTop.y)
+                quadraticTo(earTop.x - 0.75f * u, earTop.y + 0.5f * u, earTop.x - 0.45f * u, earTop.y + 1.5f * u)
+                quadraticTo(earTop.x - 0.25f * u, earTop.y + 1.85f * u, earTop.x + 0.1f * u, earTop.y + 1.5f * u)
+                quadraticTo(earTop.x + 0.45f * u, earTop.y + 0.6f * u, earTop.x + 0.55f * u, earTop.y + 0.1f * u)
+                close()
+            }
+            drawPath(ear, Brush.verticalGradient(listOf(color, dark), startY = earTop.y, endY = earTop.y + 1.9f * u))
         }
         // Collar with its tag.
-        drawLine(Color(0xFFE53935), Offset(head.x - 0.8f * u, head.y + 0.7f * u), Offset(head.x - 0.1f * u, head.y + 1.05f * u), strokeWidth = 0.3f * u, cap = StrokeCap.Round)
-        drawCircle(Color(0xFFFFD54F), radius = 0.17f * u, center = Offset(head.x - 0.35f * u, head.y + 1.3f * u))
+        drawLine(Color(0xFFE53935), Offset(head.x - 0.75f * u, head.y + 0.75f * u), Offset(head.x + 0.05f * u, head.y + 1.1f * u), strokeWidth = 0.32f * u, cap = StrokeCap.Round)
+        drawCircle(Color(0xFFFFD54F), radius = 0.18f * u, center = Offset(head.x - 0.3f * u, head.y + 1.35f * u))
+        drawCircle(Color(0xFFB8860B), radius = 0.07f * u, center = Offset(head.x - 0.3f * u, head.y + 1.35f * u))
     }
     // Eye with a highlight; blinks every few seconds.
     if ((time % 4f) < 0.12f) {
