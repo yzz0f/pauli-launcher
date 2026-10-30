@@ -1,4 +1,5 @@
 <resources>
-    <color name="ic_launcher_background">#0B1220</color>
+    <!-- ferLauncher: the Morado theme's night ground, slightly lifted so the rim reads. -->
+    <color name="ic_launcher_background">#15102A</color>
     <color name="launcher_background">#0A0E1A</color>
 </resources>

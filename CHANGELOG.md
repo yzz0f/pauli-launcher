@@ -13,6 +13,10 @@ All notable changes to this project are documented here. The format follows
   (`com.yzz0f.ferlauncher`) so it installs next to Open Car Project.
 - **Accent colors:** purple now uses the hand-tuned base palette; blue is generated from its hue
   like the other accents.
+- **App icon:** the open-wheel icon in the fork's Morado palette — purple neon arc with a
+  lighter glow head, purple hub, deep-purple background.
+- **In-app updates:** the update checker now reads this fork's GitHub releases
+  (`yzz0f/pauli-launcher`) instead of the upstream project's.
 
 ## [0.18.0] - 2026-10-28
 

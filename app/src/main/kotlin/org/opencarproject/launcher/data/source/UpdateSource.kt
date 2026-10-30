@@ -21,7 +21,9 @@ data class AppRelease(val version: String, val apkUrl: String)
  */
 object UpdateSource {
 
-    private const val LATEST = "https://api.github.com/repos/maldos23/open-car-project/releases/latest"
+    // ferLauncher fork: updates come from the fork's releases, never the upstream project's
+    // (an upstream APK has another application id and would not update this install anyway).
+    private const val LATEST = "https://api.github.com/repos/yzz0f/pauli-launcher/releases/latest"
     const val ACTION_STATUS = "org.opencarproject.launcher.UPDATE_STATUS"
 
     fun currentVersion(context: Context): String =

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  "Open wheel": a steering wheel whose rim is open at the top (an open system the driver can
-  reach into) with a neon arc, the same light as the motion glow. Everything sits inside the
-  66 dp safe zone of the adaptive icon; docs/images/icon.svg is the same drawing for the docs.
+  ferLauncher "open wheel": the upstream steering wheel recolored to the fork's Morado
+  palette — a purple neon arc with a lighter head, the motion glow at night. Everything
+  sits inside the 66 dp safe zone of the adaptive icon.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
@@ -20,7 +20,14 @@
     <!-- Neon arc: the motion glow travelling along the rim -->
     <path
         android:pathData="M66,33.215 A24,24 0 0,1 76.553,62.208"
-        android:strokeColor="#00E5FF"
+        android:strokeColor="#A07CFF"
+        android:strokeWidth="6"
+        android:strokeLineCap="round" />
+
+    <!-- Glow head: the brightest point of the arc -->
+    <path
+        android:pathData="M66,33.215 A24,24 0 0,1 74.785,43.785"
+        android:strokeColor="#E6DCFF"
         android:strokeWidth="6"
         android:strokeLineCap="round" />
 
@@ -33,6 +40,6 @@
 
     <!-- Hub -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="#A07CFF"
         android:pathData="M46,54 A8,8 0 1,0 62,54 A8,8 0 1,0 46,54 Z" />
 </vector>
