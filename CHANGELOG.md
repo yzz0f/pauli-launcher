@@ -6,6 +6,19 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.21.0] - 2026-11-01
+
+### Added
+
+- **Cameras module:** one tap opens the head unit's camera app — the 360 around-view monitor
+  when the unit has one, otherwise a DVR / reverse / plain camera app (auto-detected).
+- **Trip road in the navigation card:** while navigating, the trip is drawn as a little road
+  with a goal flag and the dog trotting towards it — "how much is left" at a glance.
+
+### Changed
+
+- **Speed scene cat:** the same big shiny kawaii eye as the dog.
+
 ## [0.20.0] - 2026-11-01
 
 ### Changed

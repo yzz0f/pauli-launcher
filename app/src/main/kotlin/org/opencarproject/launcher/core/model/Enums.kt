@@ -65,6 +65,9 @@ enum class CatalogItemKind {
 
     /** FM radio: opens the head unit's radio app and shows what is on air (MediaSession). */
     RADIO,
+
+    /** Cameras: opens the head unit's camera app (360 around-view when available). */
+    CAMERA,
 }
 
 /** Weather condition (groups Open-Meteo WMO codes). */

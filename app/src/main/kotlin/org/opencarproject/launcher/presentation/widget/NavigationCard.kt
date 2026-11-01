@@ -33,6 +33,8 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -44,11 +46,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import org.opencarproject.launcher.core.pure.TripText
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -95,6 +102,12 @@ private fun GuidanceContent(sbn: StatusBarNotification) {
     val distance = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString().orEmpty()
     val instruction = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString().orEmpty()
     val arrival = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)?.toString().orEmpty()
+    // "How much is left": remaining meters from the summary line, against the longest remaining
+    // seen this trip (a longer remaining than the record means a new trip started).
+    val remaining = remember(arrival) { TripText.parse(arrival).meters }
+    var tripTotal by remember { mutableIntStateOf(0) }
+    if (remaining != null && remaining > tripTotal) tripTotal = remaining
+    val tripProgress = if (remaining != null && tripTotal > 0) 1f - remaining.toFloat() / tripTotal else null
     val arrow = remember(sbn.key, sbn.postTime) {
         runCatching { sbn.notification.getLargeIcon()?.loadDrawable(context)?.toBoundedImageBitmap(context.dpInt(96f)) }.getOrNull()
     }
@@ -157,6 +170,9 @@ private fun GuidanceContent(sbn: StatusBarNotification) {
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
+                }
+                if (tripProgress != null) {
+                    TripRoad(progress = tripProgress, modifier = Modifier.fillMaxWidth().height(26.dp).padding(top = 4.dp))
                 }
             }
 
@@ -401,4 +417,50 @@ internal fun Context.openNavigationApp(packageName: String?) {
     val intent = packageName?.let { packageManager.getLaunchIntentForPackage(it) }
         ?: Intent(Intent.ACTION_VIEW, "geo:0,0".toUri())
     runCatching { startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+}
+
+// ---- "How much is left": the trip drawn as a little road ----
+
+/**
+ * The trip as a road: dashed center line, a start dot, a goal flag, and the dog trotting
+ * towards it at [progress] (0..1) — the kids' "are we there yet?" at a glance.
+ */
+@Composable
+internal fun TripRoad(progress: Float, modifier: Modifier = Modifier) {
+    val road = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.25f)
+    val dash = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.5f)
+    val dogColor = MaterialTheme.colorScheme.onPrimaryContainer
+    val flagColor = MaterialTheme.colorScheme.primary
+    Canvas(modifier) {
+        val y = size.height * 0.62f
+        val margin = size.height * 0.35f
+        val x0 = margin
+        val x1 = size.width - margin
+        // Road and its dashed center line.
+        drawLine(road, Offset(x0, y), Offset(x1, y), strokeWidth = size.height * 0.34f, cap = StrokeCap.Round)
+        drawLine(
+            dash, Offset(x0, y), Offset(x1, y), strokeWidth = size.height * 0.05f,
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(size.height * 0.22f, size.height * 0.22f)),
+        )
+        // Goal flag.
+        val pole = Offset(x1, y - size.height * 0.18f)
+        drawLine(dogColor, pole, Offset(pole.x, pole.y - size.height * 0.5f), strokeWidth = size.height * 0.07f, cap = StrokeCap.Round)
+        val flag = Path().apply {
+            moveTo(pole.x, pole.y - size.height * 0.5f)
+            lineTo(pole.x + size.height * 0.34f, pole.y - size.height * 0.38f)
+            lineTo(pole.x, pole.y - size.height * 0.26f)
+            close()
+        }
+        drawPath(flag, flagColor)
+        // Dog head marker at the covered fraction of the road.
+        val x = x0 + (x1 - x0) * progress.coerceIn(0f, 1f)
+        val r = size.height * 0.26f
+        val head = Offset(x, y - size.height * 0.26f)
+        // Floppy ear behind, head, snout and eye — facing the flag.
+        drawCircle(dogColor.copy(alpha = 0.65f), radius = r * 0.45f, center = head + Offset(-r * 0.75f, -r * 0.15f))
+        drawCircle(dogColor, radius = r, center = head)
+        drawCircle(dogColor, radius = r * 0.45f, center = head + Offset(r * 0.8f, r * 0.25f))
+        drawCircle(Color.White, radius = r * 0.3f, center = head + Offset(r * 0.25f, -r * 0.25f))
+        drawCircle(Color(0xFF14110F), radius = r * 0.16f, center = head + Offset(r * 0.32f, -r * 0.25f))
+    }
 }

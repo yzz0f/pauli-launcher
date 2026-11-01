@@ -45,7 +45,7 @@ class AddItem(
         val preferredSpan = when (candidate.kind) {
             CatalogItemKind.APP -> Cell(1, 1)
             CatalogItemKind.MAP, CatalogItemKind.MEDIA, CatalogItemKind.EMBEDDED_MAP -> Cell(2, 3 * scale)
-            CatalogItemKind.NOTIFICATIONS, CatalogItemKind.RADIO -> Cell(2, 2 * scale)
+            CatalogItemKind.NOTIFICATIONS, CatalogItemKind.RADIO, CatalogItemKind.CAMERA -> Cell(2, 2 * scale)
             CatalogItemKind.CLIMATE -> Cell(2, 3 * scale)
             CatalogItemKind.WIDGET -> (candidate.suggestedSpan ?: Cell(1, 1)).let { it.copy(column = it.column * scale) }
         }.let { GridMath.clampSpan(Cell(0, 0), it, current.grid) }
@@ -61,7 +61,7 @@ class AddItem(
 
         return when (candidate.kind) {
             CatalogItemKind.APP, CatalogItemKind.MAP, CatalogItemKind.MEDIA, CatalogItemKind.NOTIFICATIONS, CatalogItemKind.CLIMATE,
-            CatalogItemKind.EMBEDDED_MAP, CatalogItemKind.RADIO ->
+            CatalogItemKind.EMBEDDED_MAP, CatalogItemKind.RADIO, CatalogItemKind.CAMERA ->
                 AddItemResult.Success(placeAndSave(current, candidate, widgetId = -1, freeCell, span))
 
             CatalogItemKind.WIDGET -> {

@@ -65,6 +65,7 @@ class SystemCatalogSource(
             .takeIf { ClimateSource.isAvailable(context) },
         builtin(CatalogItemKind.EMBEDDED_MAP, BuiltinKeys.EMBEDDED_MAP, "Mapa integrado", "Google Maps dentro de la tarjeta (requiere adb root)"),
         builtin(CatalogItemKind.RADIO, BuiltinKeys.RADIO, "Radio FM", "Abre la radio del equipo y muestra lo que suena"),
+        builtin(CatalogItemKind.CAMERA, BuiltinKeys.CAMERA, "Cámaras", "Abre la cámara del equipo (360 si existe)"),
     )
 
     private fun builtin(kind: CatalogItemKind, key: String, title: String, description: String) = CatalogItem(

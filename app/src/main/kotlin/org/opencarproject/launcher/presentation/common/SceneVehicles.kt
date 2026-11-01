@@ -550,15 +550,15 @@ private fun DrawScope.pet(base: Offset, time: Float, kmh: Float, color: Color, c
         drawCircle(Color(0xFFFFD54F), radius = 0.18f * u, center = Offset(head.x - 0.3f * u, head.y + 1.35f * u))
         drawCircle(Color(0xFFB8860B), radius = 0.07f * u, center = Offset(head.x - 0.3f * u, head.y + 1.35f * u))
     }
-    // Eye with highlights; blinks every few seconds. The dog's is big and shiny (kawaii).
-    val eyeR = if (cat) 0.18f else 0.34f
+    // Eye with highlights; blinks every few seconds. Big and shiny on both pets (kawaii).
+    val eyeR = if (cat) 0.26f else 0.34f
     if ((time % 4f) < 0.12f) {
         drawLine(Color(0xFF111111), face - Offset(eyeR * u, 0f), face + Offset(eyeR * u, 0f), strokeWidth = 0.12f * u, cap = StrokeCap.Round)
     } else {
-        if (!cat) drawCircle(Color.White, radius = 0.42f * u, center = face)
+        drawCircle(Color.White, radius = eyeR * 1.25f * u, center = face)
         drawCircle(Color(0xFF14110F), radius = eyeR * u, center = face)
-        drawCircle(Color.White, radius = (if (cat) 0.06f else 0.12f) * u, center = face + Offset(0.08f * u, -0.1f * u))
-        if (!cat) drawCircle(Color.White.copy(alpha = 0.8f), radius = 0.05f * u, center = face + Offset(-0.08f * u, 0.12f * u))
+        drawCircle(Color.White, radius = eyeR * 0.36f * u, center = face + Offset(0.08f * u, -0.1f * u))
+        drawCircle(Color.White.copy(alpha = 0.8f), radius = eyeR * 0.16f * u, center = face + Offset(-0.08f * u, 0.12f * u))
     }
 }
 

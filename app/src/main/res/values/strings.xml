@@ -303,6 +303,9 @@
     <string name="module_radio">FM radio</string>
     <string name="radio_none">No radio app on this device</string>
     <string name="radio_open">Open the radio</string>
+    <string name="module_camera">Cameras</string>
+    <string name="camera_none">No camera app on this device</string>
+    <string name="camera_open">Open the cameras</string>
     <string name="climate_unavailable">No climate service on this head unit</string>
     <string name="climate_power">Climate on/off</string>
     <string name="climate_ac">A/C</string>

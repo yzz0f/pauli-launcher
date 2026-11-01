@@ -280,6 +280,9 @@
     <string name="module_radio">Radio FM</string>
     <string name="radio_none">No hay una app de radio en este equipo</string>
     <string name="radio_open">Abrir la radio</string>
+    <string name="module_camera">Cámaras</string>
+    <string name="camera_none">No hay una app de cámara en este equipo</string>
+    <string name="camera_open">Abrir las cámaras</string>
     <string name="climate_unavailable">Este radio no tiene servicio de clima</string>
     <string name="climate_power">Encender/apagar clima</string>
     <string name="climate_ac">A/C</string>
