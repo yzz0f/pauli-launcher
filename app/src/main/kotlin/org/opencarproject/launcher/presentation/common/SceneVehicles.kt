@@ -485,7 +485,8 @@ private fun DrawScope.pet(base: Offset, time: Float, kmh: Float, color: Color, c
         drawOval(dark.copy(alpha = 0.75f), topLeft = Offset(base.x + 3.6f * u, bodyY - 0.3f * u), size = Size(0.9f * u, 0.6f * u))
         drawOval(shine.copy(alpha = 0.45f), topLeft = Offset(base.x + 4.9f * u, bodyY + 0.1f * u), size = Size(1.1f * u, 0.8f * u))
     }
-    val head = Offset(base.x + 6.5f * u, bodyY - 1.2f * u)
+    // The dog is drawn kawaii-style: a bigger head and eye than the cat's.
+    val head = Offset(base.x + 6.5f * u, bodyY - (if (cat) 1.2f else 1.45f) * u)
     val face = Offset(head.x + 0.45f * u, head.y - 0.25f * u)
     if (cat) {
         // Pointy ears with pink inside; one twitches now and then.
@@ -514,7 +515,7 @@ private fun DrawScope.pet(base: Offset, time: Float, kmh: Float, color: Color, c
         rotate(if (moving) -stride * 12f else 0f, pivot = Offset(head.x + 0.15f * u, head.y - 0.8f * u)) {
             drawRoundRect(dark.copy(alpha = 0.55f), topLeft = Offset(head.x - 0.05f * u, head.y - 0.9f * u), size = Size(0.55f * u, 1.3f * u), cornerRadius = CornerRadius(0.28f * u))
         }
-        drawCircle(Brush.radialGradient(listOf(shine, color), center = head - Offset(0.3f * u, 0.3f * u), radius = 1.3f * u), radius = 1.05f * u, center = head)
+        drawCircle(Brush.radialGradient(listOf(shine, color), center = head - Offset(0.3f * u, 0.3f * u), radius = 1.7f * u), radius = 1.35f * u, center = head)
         // Muzzle tapering to the nose, with its jaw line and the tongue out when running fast.
         val muzzle = Path().apply {
             moveTo(head.x + 0.5f * u, head.y - 0.55f * u)
@@ -523,7 +524,8 @@ private fun DrawScope.pet(base: Offset, time: Float, kmh: Float, color: Color, c
             quadraticTo(head.x + 0.5f * u, head.y + 0.7f * u, head.x + 0.3f * u, head.y + 0.3f * u)
             close()
         }
-        drawPath(muzzle, Brush.verticalGradient(listOf(shine, color), startY = head.y - 0.6f * u, endY = head.y + 0.7f * u))
+        // White snout patch, like the kawaii mascots.
+        drawPath(muzzle, Brush.verticalGradient(listOf(Color(0xFFFFF8F2), lerp(Color(0xFFF4E8DE), color, 0.25f)), startY = head.y - 0.6f * u, endY = head.y + 0.7f * u))
         drawLine(dark.copy(alpha = 0.6f), Offset(head.x + 1.75f * u, head.y + 0.15f * u), Offset(head.x + 1.1f * u, head.y + 0.45f * u), strokeWidth = 0.1f * u, cap = StrokeCap.Round)
         if (kmh > 40f) {
             rotate(stride * 6f, pivot = Offset(head.x + 1.2f * u, head.y + 0.5f * u)) {
@@ -548,12 +550,15 @@ private fun DrawScope.pet(base: Offset, time: Float, kmh: Float, color: Color, c
         drawCircle(Color(0xFFFFD54F), radius = 0.18f * u, center = Offset(head.x - 0.3f * u, head.y + 1.35f * u))
         drawCircle(Color(0xFFB8860B), radius = 0.07f * u, center = Offset(head.x - 0.3f * u, head.y + 1.35f * u))
     }
-    // Eye with a highlight; blinks every few seconds.
+    // Eye with highlights; blinks every few seconds. The dog's is big and shiny (kawaii).
+    val eyeR = if (cat) 0.18f else 0.34f
     if ((time % 4f) < 0.12f) {
-        drawLine(Color(0xFF111111), face - Offset(0.18f * u, 0f), face + Offset(0.18f * u, 0f), strokeWidth = 0.1f * u, cap = StrokeCap.Round)
+        drawLine(Color(0xFF111111), face - Offset(eyeR * u, 0f), face + Offset(eyeR * u, 0f), strokeWidth = 0.12f * u, cap = StrokeCap.Round)
     } else {
-        drawCircle(Color(0xFF111111), radius = 0.18f * u, center = face)
-        drawCircle(Color.White, radius = 0.06f * u, center = face + Offset(0.06f * u, -0.06f * u))
+        if (!cat) drawCircle(Color.White, radius = 0.42f * u, center = face)
+        drawCircle(Color(0xFF14110F), radius = eyeR * u, center = face)
+        drawCircle(Color.White, radius = (if (cat) 0.06f else 0.12f) * u, center = face + Offset(0.08f * u, -0.1f * u))
+        if (!cat) drawCircle(Color.White.copy(alpha = 0.8f), radius = 0.05f * u, center = face + Offset(-0.08f * u, 0.12f * u))
     }
 }
 
